@@ -32,11 +32,13 @@ export const TRANSITION = 15;
 
 // Scene lengths in frames. Transitions overlap by TRANSITION frames, so the video is
 // 900 frames long: 30 seconds, which is 15 Strudel cycles at 0.5 cycles per second.
+// patterns/soundtrack.strudel starts its sections on these cuts: the drop is at
+// cycle 7 (frame 420, the query scene) and the outro hit is at cycle 13 (frame 780).
 export const SCENES = {
   intro: 90,
   code: 165,
-  check: 180,
-  query: 255,
+  check: 210,
+  query: 225,
   agents: 165,
   outro: 120,
 } as const;

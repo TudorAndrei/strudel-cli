@@ -35,7 +35,7 @@ export const fraction = (text: string): number => {
 export const frameToCycle = (frame: number): number => (frame / FPS) * data.cps;
 
 const kickFrames = data.timeline.events
-  .filter((event) => event.value.s === 'bd')
+  .filter((event) => event.value.s === 'bd' || event.value.s === 'impact')
   .map((event) => Math.round((fraction(event.begin) / data.cps) * FPS));
 
 // 1 on a kick drum hit in the soundtrack, then decays to 0.
@@ -46,6 +46,13 @@ export const kickPulse = (frame: number): number => {
     last = kick;
   }
   return Math.exp(-(frame - last) / 5);
+};
+
+// Frame range of a one-off soundtrack event, such as the glitch.
+export const eventFrames = (s: string): [number, number] => {
+  const event = data.timeline.events.find((e) => e.value.s === s);
+  if (!event) throw new Error(`No ${s} event in the soundtrack`);
+  return [fraction(event.begin), fraction(event.end)].map((cycle) => Math.round((cycle / data.cps) * FPS)) as [number, number];
 };
 
 const NOTE_STEPS: Record<string, number> = { c: 0, d: 2, e: 4, f: 5, g: 7, a: 9, b: 11 };

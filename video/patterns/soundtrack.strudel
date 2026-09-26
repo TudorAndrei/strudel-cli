@@ -1,0 +1,51 @@
+// Soundtrack of the promo video: 15 cycles, 30 seconds at 0.5 cycles per second.
+// scripts/synth.mjs plays the events that `strudel query soundtrack.strudel` returns.
+// Each section starts on a cut in the video. The drop plays the song.strudel patterns.
+
+// 1 in cycles `from` to `to - 1`, 0 in the other cycles.
+const during = (from, to) => cat(...Array.from({ length: 15 }, (_, i) => (i >= from && i < to ? 1 : 0)))
+
+// From song.strudel
+const drums = s("bd*4, ~ sd ~ sd, hh*8")
+const bass = note("<[c2 c3]*4 [ab1 ab2]*4>").s("sawtooth")
+const lead = note("<[eb4 g4 bb4 d5] [c4 eb4 g4 c5]>").s("triangle")
+
+const chords = note("<[c3,eb3,g3,bb3,d4] [ab2,c3,eb3,g3,bb3]>")
+const arp = note("<[c4 eb4 g4 bb4 d5 bb4 g4 eb4]*2 [ab3 c4 eb4 g4 bb4 g4 eb4 c4]*2>")
+
+stack(
+  // Logo, drop, and outro hits
+  s("impact").mask("<1 0 0 0 0 0 0 1 0 0 0 0 0 1 0>"),
+
+  // A pad that opens over the whole video, and thins out in the build
+  chords.s("supersaw").attack(.6).release(2).lpf(saw.range(400, 5200).slow(15)).hpf(during(6, 7).mul(900)).room(.6).gain(.75),
+
+  // 0:02 the code scene: plucked arpeggio with a ping-pong echo
+  arp.s("pluck").lpf(sine.range(1800, 7000).slow(8)).pan("[.25 .75]*8").delay(.45).room(.3).mask(during(1, 15)),
+  arp.transpose(12).s("pluck").lpf(4000).pan("[.8 .2]*8").delay(.5).gain(.5).mask(during(9, 13)),
+
+  // 0:04 hats and a closed filter on the bass
+  s("hh*8").gain("[.4 .7]*4").mask(during(2, 4)),
+  bass.lpf(420).lpq(6).mask(during(2, 4)),
+  lead.room(.5).delay(.35).mask(during(2, 4)),
+
+  // 0:08 the check scene: the full groove
+  drums.gain(.75).mask(during(4, 6)),
+  bass.lpf(sine.range(400, 1100).slow(4)).lpq(10).gain(.8).mask(during(4, 6)),
+
+  // 0:11.5 broken.strudel fails, and the music stutters
+  s("~ ~ ~ glitch").mask(during(5, 6)),
+
+  // 0:12 build: snare roll and noise riser
+  s("sd*2 sd*4 sd*8 sd*16").gain(saw.range(.25, 1)).room(.2).mask(during(6, 7)),
+  s("riser").mask(during(6, 7)),
+
+  // 0:14 the query scene: drop with song.strudel
+  drums.mask(during(7, 14)),
+  s("[~ oh]*4").gain(.8).mask(during(7, 13)),
+  bass.lpf(sine.range(700, 3400).slow(4)).lpq(14).mask(during(7, 13)),
+  lead.room(.5).delay(.4).mask(during(7, 15)),
+
+  // 0:28.5 tape stop
+  s("~ tapestop@3").mask(during(14, 15)),
+)

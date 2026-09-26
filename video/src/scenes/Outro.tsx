@@ -38,6 +38,11 @@ export const Outro: React.FC = () => {
           <span style={{ color: color.codeFn, fontWeight: 700 }}>tudorandrei.github.io/strudel-cli</span>
         </div>
       </Rise>
+      <Rise delay={40} style={{ position: 'absolute', bottom: 64 }}>
+        <div style={{ fontFamily: font.mono, fontSize: 22, color: color.nightMuted }}>
+          music: soundtrack.strudel → strudel query → {data.timeline.eventCount} events
+        </div>
+      </Rise>
     </AbsoluteFill>
   );
 };

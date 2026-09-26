@@ -67,7 +67,7 @@ const place = (event: StrudelEvent) => {
 const Roll: React.FC<{ globalFrame: number }> = ({ globalFrame }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  // The soundtrack loops the same two cycles, so the playhead shows where the audio is.
+  // The drop plays the song.strudel patterns in absolute time, so the playhead shows where the audio is.
   const cycle = frameToCycle(globalFrame) % SPAN;
   const head = (cycle / SPAN) * ROLL_WIDTH;
   const ticks = Array.from({ length: SPAN * 4 + 1 }, (_, i) => i / 4);

@@ -31,7 +31,7 @@ const broken = expect(run(['check', 'broken.strudel']), 1);
 const count = expect(run(['check', 'song.strudel', '--json', '--limit', '0']), 0);
 const query = expect(run(['query', 'song.strudel', '--from', '0', '--to', '2']), 0);
 const describe = expect(run(['describe']), 0);
-const timeline = expect(run(['query', 'song.strudel', '--from', '0', '--to', String(SOUNDTRACK_CYCLES)]), 0);
+const timeline = expect(run(['query', 'soundtrack.strudel', '--from', '0', '--to', String(SOUNDTRACK_CYCLES)]), 0);
 
 const capture = {
   version: JSON.parse(readFileSync(join(root, '..', 'package.json'), 'utf8')).version,

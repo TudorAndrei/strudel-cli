@@ -1,10 +1,11 @@
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
-import { ExitBadge, Headline, Kicker, Lead, Prompt, Rise, typed, useEnter, Window } from '../components';
-import { data } from '../data';
+import { ExitBadge, Headline, Kicker, Lead, Prompt, Rise, typed, useEnter, useGlobalFrame, Window } from '../components';
+import { data, eventFrames } from '../data';
 import { color } from '../theme';
 
 const FIRST = 20;
-const SECOND = 88;
+// The error appears at frame 345, on the glitch event in soundtrack.strudel (cycle 23/4).
+const SECOND = 95;
 
 export const Check: React.FC = () => {
   const frame = useCurrentFrame();
@@ -14,6 +15,11 @@ export const Check: React.FC = () => {
   const secondDone = frame > SECOND + data.broken.command.length / 1.6 + 6;
   const okEnter = useEnter(FIRST + data.check.command.length / 1.6 + 8, 12);
   const failEnter = useEnter(SECOND + data.broken.command.length / 1.6 + 8, 12);
+  // The window shakes while the soundtrack stutters.
+  const globalFrame = useGlobalFrame('check');
+  const [glitchStart, glitchEnd] = eventFrames('glitch');
+  const glitching = globalFrame >= glitchStart && globalFrame < glitchEnd;
+  const jitter = glitching ? (((globalFrame * 7919) % 23) - 11) * 2.4 : 0;
   return (
     <AbsoluteFill style={{ background: color.paper, flexDirection: 'row', alignItems: 'center', padding: '0 120px', gap: 100 }}>
       <div style={{ flex: '0 0 600px' }}>
@@ -30,7 +36,13 @@ export const Check: React.FC = () => {
         </Rise>
       </div>
       <Rise delay={6} distance={80} style={{ flex: 1 }}>
-        <Window title="zsh">
+        <Window
+          title="zsh"
+          style={{
+            transform: `translateX(${jitter}px) skewX(${jitter / 8}deg)`,
+            filter: glitching ? `drop-shadow(${jitter / 2}px 0 0 ${color.orange}) drop-shadow(${-jitter / 2}px 0 0 ${color.codeFn})` : undefined,
+          }}
+        >
           <div style={{ padding: '40px 44px', fontSize: 32, lineHeight: 1.7, minHeight: 440 }}>
             <Prompt text={first} cursor={!firstDone} />
             {firstDone && (
