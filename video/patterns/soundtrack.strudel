@@ -21,7 +21,9 @@ stack(
   chords.s("supersaw").attack(.6).release(2).lpf(saw.range(400, 5200).slow(15)).hpf(during(6, 7).mul(900)).room(.6).gain(.75),
 
   // 0:02 the code scene: plucked arpeggio with a ping-pong echo
-  arp.s("pluck").lpf(sine.range(1800, 7000).slow(8)).pan("[.25 .75]*8").delay(.45).room(.3).mask(during(1, 15)),
+  // It rests for the first four bars of the drop, and returns with the octave arp
+  arp.s("pluck").lpf(sine.range(1800, 7000).slow(8)).pan("[.25 .75]*8").delay(.45).room(.3).mask(during(1, 7)),
+  arp.s("pluck").lpf(sine.range(1800, 7000).slow(8)).pan("[.25 .75]*8").delay(.45).room(.3).mask(during(9, 15)),
   arp.transpose(12).s("pluck").lpf(4000).pan("[.8 .2]*8").delay(.5).gain(.5).mask(during(9, 13)),
 
   // 0:04 hats and a closed filter on the bass
@@ -39,6 +41,8 @@ stack(
   // 0:12 build: snare roll and noise riser
   s("sd*2 sd*4 sd*8 sd*16").gain(saw.range(.25, 1)).room(.2).mask(during(6, 7)),
   s("riser").mask(during(6, 7)),
+  // The last eighth before the drop is silent
+  s("~@7 gap").mask(during(6, 7)),
 
   // 0:14 the query scene: drop with song.strudel
   drums.mask(during(7, 14)),

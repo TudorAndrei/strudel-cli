@@ -1,7 +1,8 @@
 // Renders the queried Strudel events to a WAV file. strudel-cli makes no sound,
 // so this synth plays the exact events that the CLI returned for soundtrack.strudel.
 // It reads the Strudel controls in each event: note, s, gain, pan, cutoff, hcutoff,
-// resonance, attack, release, room, and delay.
+// resonance, attack, release, room, and delay. Three events act on the whole mix:
+// gap, glitch, and tapestop.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -252,6 +253,10 @@ const instruments = {
     masterEffects.push({ type: 'glitch', start, seconds });
   },
 
+  gap(start, seconds) {
+    masterEffects.push({ type: 'gap', start, seconds });
+  },
+
   tapestop(start, seconds) {
     masterEffects.push({ type: 'tapestop', start, seconds });
   },
@@ -355,7 +360,14 @@ for (const effect of masterEffects) {
   const first = Math.floor(effect.start * RATE);
   const count = Math.floor(effect.seconds * RATE);
   const source = mix.map((channel) => channel.slice(first, first + count));
-  if (effect.type === 'glitch') {
+  if (effect.type === 'gap') {
+    // Silence with short ramps, so the cut does not click.
+    const ramp = Math.floor(0.004 * RATE);
+    for (let i = 0; i < count && first + i < length; i++) {
+      const level = 1 - Math.min(1, i / ramp, (count - i) / ramp);
+      for (const channel of mix) channel[first + i] *= level;
+    }
+  } else if (effect.type === 'glitch') {
     // Ratchet: repeat the first slice, and make the slice shorter four times.
     const slices = [1 / 16, 1 / 32, 1 / 64, 1 / 128].map((c) => Math.floor((c / cps) * RATE));
     for (let i = 0; i < count && first + i < length; i++) {
