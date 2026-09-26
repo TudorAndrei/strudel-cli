@@ -7,7 +7,7 @@ Use this CLI to check a trusted Strudel source file or inspect the events that i
 On macOS ARM64 or Linux x64:
 
 ```sh
-mise use -g github:TudorAndrei/strudel-cli@latest
+mise use -g github:TudorAndrei/strudel-cli@0.2.0
 ```
 
 ## Workflow

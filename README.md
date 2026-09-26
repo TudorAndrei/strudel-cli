@@ -18,11 +18,11 @@ npm link
 To install the standalone command with [mise](https://mise.jdx.dev/dev-tools/backends/github.html) on macOS ARM64 or Linux x64:
 
 ```sh
-mise use -g github:TudorAndrei/strudel-cli@latest
+mise use -g github:TudorAndrei/strudel-cli@0.2.0
 strudel --help
 ```
 
-For one project, omit `-g`. The GitHub release has one archive for each supported system.
+For one project, omit `-g`. Choose a newer version from [releases](https://github.com/TudorAndrei/strudel-cli/releases) when one is available. The GitHub release has one archive for each supported system.
 
 ## Commands
 
