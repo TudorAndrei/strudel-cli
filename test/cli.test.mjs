@@ -21,12 +21,41 @@ test('query returns ordered Strudel events as JSON', () => {
   const output = JSON.parse(result.stdout);
   assert.deepEqual(output.range, [0, 2]);
   assert.equal(output.valid, true);
+  assert.equal(output.eventCount, 4);
+  assert.equal(output.truncated, false);
   assert.deepEqual(output.events.map(({ begin, end, value }) => [begin, end, value.s]), [
     ['0', '1/2', 'bd'],
     ['1/2', '1', 'hh'],
     ['1', '3/2', 'bd'],
     ['3/2', '2', 'hh'],
   ]);
+});
+
+test('describe exposes command inputs and JSON output without a file', () => {
+  const result = spawnSync(process.execPath, [cli, 'describe'], { encoding: 'utf8' });
+  assert.equal(result.status, 0);
+  const output = JSON.parse(result.stdout);
+  assert.equal(output.schemaVersion, 1);
+  assert.equal(output.commands.query.required.file, 'Path to a Strudel source file.');
+  assert.equal(output.exitCodes.failure, 1);
+});
+
+test('query limits events and reports the full count', () => {
+  const result = run('s("bd hh")', ['query', '--from', '0', '--to', '2', '--limit', '1']);
+  assert.equal(result.status, 0);
+  const output = JSON.parse(result.stdout);
+  assert.equal(output.eventCount, 4);
+  assert.equal(output.events.length, 1);
+  assert.equal(output.truncated, true);
+});
+
+test('check can return only the event count', () => {
+  const result = run('s("bd hh")', ['check', '--json', '--limit', '0']);
+  assert.equal(result.status, 0);
+  const output = JSON.parse(result.stdout);
+  assert.equal(output.eventCount, 2);
+  assert.deepEqual(output.events, []);
+  assert.equal(output.truncated, true);
 });
 
 test('query returns the part span of a continuous pattern', () => {

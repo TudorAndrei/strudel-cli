@@ -18,6 +18,15 @@ test('standalone executable checks and queries a pattern', () => {
   const query = spawnSync(binary, ['query', file], { encoding: 'utf8' });
   assert.equal(query.status, 0, query.stderr);
   assert.deepEqual(JSON.parse(query.stdout).events.map((event) => event.value.s), ['bd', 'hh']);
+
+  const limited = spawnSync(binary, ['query', file, '--limit', '1'], { encoding: 'utf8' });
+  assert.equal(limited.status, 0, limited.stderr);
+  assert.equal(JSON.parse(limited.stdout).eventCount, 2);
+  assert.equal(JSON.parse(limited.stdout).events.length, 1);
+
+  const describe = spawnSync(binary, ['describe'], { encoding: 'utf8' });
+  assert.equal(describe.status, 0, describe.stderr);
+  assert.equal(JSON.parse(describe.stdout).schemaVersion, 1);
 });
 
 test('standalone executable exits with failure for invalid source', () => {
