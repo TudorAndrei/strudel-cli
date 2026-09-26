@@ -9,6 +9,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "build:binary": "bun build --compile src/cli.mjs --outfile dist/strudel",
+    "build:release": "node scripts/build-release.mjs",
     "prepare": "npm run build",
     "test": "npm run build && node --test test/cli.test.mjs",
     "test:binary": "npm run build:binary && node --test test/binary.test.mjs"

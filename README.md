@@ -13,6 +13,15 @@ npm link
 
 `npm install` builds the command. You can also run it with `node bin/strudel.mjs` without linking it.
 
+To install the standalone command with [mise](https://mise.jdx.dev/dev-tools/backends/github.html) on macOS ARM64 or Linux x64:
+
+```sh
+mise use -g github:TudorAndrei/strudel-cli@latest
+strudel --help
+```
+
+For one project, omit `-g`. The GitHub release has one archive for each supported system.
+
 ## Commands
 
 ```sh
@@ -50,3 +59,5 @@ npm run test:binary
 ```
 
 The build writes `dist/strudel` for the current operating system and CPU. It includes the Bun runtime and Strudel packages, so the executable does not need Node.js, Bun, or `node_modules` when you run it. To build for another system, use Bun's `--target` option as shown in the [Bun executable guide](https://bun.com/docs/bundler/executables).
+
+`npm run build:release` makes the macOS ARM64 and Linux x64 archives for a GitHub release. A `v*` tag runs the release workflow.

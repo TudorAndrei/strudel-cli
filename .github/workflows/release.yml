@@ -1,0 +1,34 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.4.2'
+      - run: npm ci
+      - run: npm test
+      - run: npm run build:release
+      - name: Check the Linux release file
+        run: |
+          mkdir -p /tmp/strudel-release-check
+          tar -xzf "dist/release/strudel-${GITHUB_REF_NAME}-linux-x64.tar.gz" -C /tmp/strudel-release-check
+          printf 's("bd hh")\n' > /tmp/strudel-release-check/song.strudel
+          /tmp/strudel-release-check/bin/strudel check /tmp/strudel-release-check/song.strudel
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/release/*.tar.gz --verify-tag --title "$GITHUB_REF_NAME" --generate-notes
