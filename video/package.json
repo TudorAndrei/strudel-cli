@@ -1,0 +1,24 @@
+{
+  "name": "strudel-cli-promo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "assets": "node scripts/capture.mjs && node scripts/synth.mjs",
+    "studio": "npm run assets && remotion studio src/index.ts",
+    "render": "npm run assets && remotion render src/index.ts Promo out/strudel-cli-promo.mp4",
+    "still": "npm run assets && remotion still src/index.ts Promo out/still.png"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.529",
+    "@remotion/google-fonts": "4.0.529",
+    "@remotion/media": "4.0.529",
+    "@remotion/transitions": "4.0.529",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "remotion": "4.0.529"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.6.0"
+  }
+}

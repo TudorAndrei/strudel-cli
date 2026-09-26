@@ -1,0 +1,5 @@
+stack(
+  s("bd*4, ~ sd ~ sd, hh*8"),
+  note("<[c2 c3]*4 [ab1 ab2]*4>").s("sawtooth"),
+  note("<[eb4 g4 bb4 d5] [c4 eb4 g4 c5]>").s("triangle")
+)

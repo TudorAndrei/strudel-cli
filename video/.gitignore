@@ -1,0 +1,4 @@
+node_modules/
+out/
+public/soundtrack.wav
+src/data/capture.json
