@@ -1,0 +1,24 @@
+{
+  "name": "strudel-cli",
+  "version": "0.1.0",
+  "description": "Check and query Strudel patterns without audio",
+  "license": "AGPL-3.0-or-later",
+  "type": "module",
+  "bin": { "strudel": "./bin/strudel.mjs" },
+  "files": ["bin", "dist/cli.mjs", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:binary": "bun build --compile src/cli.mjs --outfile dist/strudel",
+    "prepare": "npm run build",
+    "test": "npm run build && node --test test/cli.test.mjs",
+    "test:binary": "npm run build:binary && node --test test/binary.test.mjs"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@strudel/core": "1.2.6",
+    "@strudel/mini": "1.2.6",
+    "@strudel/tonal": "1.2.6",
+    "@strudel/transpiler": "1.2.6"
+  },
+  "devDependencies": { "esbuild": "0.25.12" }
+}
