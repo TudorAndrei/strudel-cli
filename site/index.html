@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Check Strudel files and inspect pattern events as JSON without a browser or audio device.">
+    <meta name="theme-color" content="#f4f7fb">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="strudel-cli — inspect a pattern before playback">
+    <meta property="og:description" content="A small headless CLI for Strudel check and JSON query workflows.">
+    <meta property="og:url" content="https://tudorandrei.github.io/strudel-cli/">
+    <link rel="canonical" href="https://tudorandrei.github.io/strudel-cli/">
+    <link rel="alternate" type="text/markdown" href="./agent-guide.md" title="Agent guide">
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+    <title>strudel-cli — check and query Strudel files</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a class="brand" href="./" aria-label="strudel-cli home">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>strudel<span class="brand-suffix">/cli</span></span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#install">Install</a>
+        <a href="#agents">For agents</a>
+        <a href="https://github.com/TudorAndrei/strudel-cli">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero wrap" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="section-kicker">Strudel, without the browser</p>
+          <h1 id="hero-title">Inspect a pattern before playback.</h1>
+          <p class="hero-intro">Check a Strudel file, query its cycle events, and give your agent JSON it can use. No audio device is required.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#install">Install the CLI</a>
+            <a class="text-link" href="https://github.com/TudorAndrei/strudel-cli/releases/latest">View release</a>
+          </div>
+          <p class="platform-note">Standalone binaries for macOS ARM64 and Linux x64.</p>
+        </div>
+
+        <div class="pattern-demo" role="group" aria-label="Example Strudel query and events">
+          <div class="demo-head"><span>song.strudel</span><span class="demo-dot" aria-hidden="true"></span></div>
+          <pre class="source-code"><code><span class="code-fn">s</span>(<span class="code-string">"bd hh"</span>)</code></pre>
+          <div class="cycle-scale" aria-hidden="true"><span>0</span><span>1/2</span><span>1</span></div>
+          <div class="event-track" role="img" aria-label="Bass drum event followed by hi-hat event"><span>bd</span><span>hh</span></div>
+          <div class="demo-command"><span aria-hidden="true">$</span> strudel query song.strudel --limit 2</div>
+          <pre class="demo-json"><code>{
+  "valid": true,
+  "range": [0, 1],
+  "eventCount": 2,
+  "events": [
+    { "begin": "0", "end": "1/2", "value": { "s": "bd" } },
+    { "begin": "1/2", "end": "1", "value": { "s": "hh" } }
+  ],
+  "truncated": false
+}</code></pre>
+        </div>
+      </section>
+
+      <section class="install-section" id="install" aria-labelledby="install-title">
+        <div class="wrap section-inner">
+          <div class="section-lead">
+            <p class="section-kicker">Install</p>
+            <h2 id="install-title">One command with mise.</h2>
+            <p>mise downloads the matching executable from the latest GitHub release. You can also <a href="https://github.com/TudorAndrei/strudel-cli/releases/latest">download an archive</a>.</p>
+          </div>
+          <div class="install-commands">
+            <pre><code>mise use -g github:TudorAndrei/strudel-cli@latest</code></pre>
+            <p>For one project, remove <code>-g</code>.</p>
+            <pre><code>strudel check song.strudel
+strudel query song.strudel --from 0 --to 4</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="agent-section wrap" id="agents" aria-labelledby="agents-title">
+        <div class="section-lead">
+          <p class="section-kicker">For agents</p>
+          <h2 id="agents-title">A small, clear command path.</h2>
+          <p>The CLI returns one JSON object on standard output for <code>query</code>, <code>describe</code>, and <code>check --json</code>. A failed command exits with code 1.</p>
+        </div>
+        <ol class="agent-steps">
+          <li><span class="step-number">1</span><div><h3>Inspect the contract</h3><p><code>strudel describe</code> returns the current command and result shapes.</p></div></li>
+          <li><span class="step-number">2</span><div><h3>Check a file</h3><p><code>strudel check song.strudel --json --limit 0</code> checks one cycle and returns the event count.</p></div></li>
+          <li><span class="step-number">3</span><div><h3>Query only what you need</h3><p><code>strudel query song.strudel --from 0 --to 4 --limit 16</code> limits the event list. <code>eventCount</code> still reports the full count.</p></div></li>
+        </ol>
+        <div class="agent-links">
+          <a href="./agent-guide.md">Read the agent guide</a>
+          <a href="./command-schema.json">Get the command schema</a>
+          <a href="./llms.txt">Get llms.txt</a>
+        </div>
+      </section>
+
+      <section class="limits-section wrap" aria-labelledby="limits-title">
+        <div class="limits-rule"></div>
+        <h2 id="limits-title">What the check covers</h2>
+        <div class="limits-copy">
+          <p>The command evaluates the file as JavaScript and queries the selected cycle range. Run source files that you trust.</p>
+          <p>A successful check covers that range. It does not verify audio samples or produce sound.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <span>strudel-cli</span>
+        <nav aria-label="Footer navigation">
+          <a href="https://github.com/TudorAndrei/strudel-cli">Source</a>
+          <a href="https://github.com/TudorAndrei/strudel-cli/blob/main/LICENSE">License</a>
+          <a href="https://strudel.cc/">Strudel</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
